@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using InventoryAPI.Models;
-using InventoryAPI.Data;
 using InventoryAPI.Dtos.ProductoDtos;
+using InventoryAPI.Services;
 
 namespace InventoryAPI.Controllers;
 
@@ -9,29 +9,27 @@ namespace InventoryAPI.Controllers;
 [Route("api/[controller]")]
 public class ProductosController : ControllerBase
 {
-    private readonly ApplicationDbContext _context;
+    private readonly ProductoService _productoService;
 
-    public ProductosController(ApplicationDbContext context)
+    public ProductosController(ProductoService productoService)
     {
-        _context = context;
+        _productoService = productoService;
     }
 
     [HttpGet]
     public ActionResult<List<Producto>> GetAll()
     {
-        var productos = _context.Productos.ToList();
+        var productos = _productoService.GetAll();
         return Ok(productos);
     }
 
     [HttpGet("{id}")]
     public ActionResult<Producto> GetProductById(int id)
     {
-        var producto = _context.Productos.FirstOrDefault(p => p.Id == id);
+        var producto = _productoService.GetProductoById(id);
 
         if (producto == null)
-        {
             return NotFound();
-        }
 
         return Ok(producto);
     }
@@ -39,57 +37,42 @@ public class ProductosController : ControllerBase
     [HttpPost]
     public ActionResult<Producto> Create([FromBody] CreateProductoDto dto)
     {
-        var producto = new Producto
+        try
         {
-            Nombre = dto.Nombre,
-            SKU = dto.SKU,
-            Descripcion = dto.Descripcion,
-            StockActual = dto.StockActual,
-            StockMinimo = dto.StockMinimo,
-            Precio = dto.Precio,
-            FechaCreacion = DateTime.Now
-        };
-
-        _context.Productos.Add(producto);
-        _context.SaveChanges();
-
-        return CreatedAtAction(nameof(GetProductById), new { id = producto.Id }, producto);
+            var producto = _productoService.Create(dto);
+            return CreatedAtAction(nameof(GetProductById), new { id = producto.Id }, producto);
+        }
+        catch (ArgumentException ex)
+        {
+            return BadRequest(ex.Message);
+        }
     }
 
     [HttpPut("{id}")]
     public ActionResult<Producto> UpdateProduct(int id, [FromBody] UpdateProductoDto dto)
     {
-        var productoEncontrado = _context.Productos.FirstOrDefault(p => p.Id == id);
-
-        if (productoEncontrado == null)
+        try
         {
-            return NotFound();
+            var producto = _productoService.Update(id, dto);
+
+            if (producto == null)
+                return NotFound();
+
+            return Ok(producto);
         }
-
-        if (dto.Nombre != null) productoEncontrado.Nombre = dto.Nombre;
-        if (dto.SKU != null) productoEncontrado.SKU = dto.SKU;
-        if (dto.Descripcion != null) productoEncontrado.Descripcion = dto.Descripcion;
-        if (dto.StockActual.HasValue) productoEncontrado.StockActual = dto.StockActual.Value;
-        if (dto.StockMinimo.HasValue) productoEncontrado.StockMinimo = dto.StockMinimo.Value;
-        if (dto.Precio.HasValue) productoEncontrado.Precio = dto.Precio.Value;
-
-        _context.SaveChanges();
-
-        return Ok(productoEncontrado);
+        catch (ArgumentException ex)
+        {
+            return BadRequest(ex.Message);
+        }
     }
 
     [HttpDelete("{id}")]
     public ActionResult DeleteProducto(int id)
     {
-        var productoExistente = _context.Productos.FirstOrDefault(p => p.Id == id);
+        bool eliminado = _productoService.Delete(id);
 
-        if (productoExistente == null)
-        {
+        if (!eliminado)
             return NotFound();
-        }
-
-        _context.Productos.Remove(productoExistente);
-        _context.SaveChanges();
 
         return NoContent();
     }
