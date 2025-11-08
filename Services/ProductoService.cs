@@ -1,26 +1,27 @@
 using InventoryAPI.Data;
 using InventoryAPI.Dtos.ProductoDtos;
 using InventoryAPI.Models;
+using InventoryAPI.Repositories;
 
 namespace InventoryAPI.Services;
 
 public class ProductoService
 {
-    private readonly ApplicationDbContext _context;
+    private readonly IProductoRepository _repository;
 
-    public ProductoService(ApplicationDbContext context)
+    public ProductoService(IProductoRepository repository)
     {
-        _context = context;
+        _repository = repository;
     }
 
     public List<Producto> GetAll()
     {
-        return _context.Productos.ToList();
+        return _repository.GetAll();
     }
 
     public Producto? GetProductoById(int id)
     {
-        return _context.Productos.FirstOrDefault(p => p.Id == id);
+        return _repository.GetById(id);
     }
 
     public Producto Create(CreateProductoDto dto)
@@ -47,15 +48,14 @@ public class ProductoService
             FechaCreacion = DateTime.Now
         };
 
-        _context.Productos.Add(producto);
-        _context.SaveChanges();
+        _repository.Add(producto);
 
         return producto;
     }
 
     public Producto? Update(int id, UpdateProductoDto dto)
     {
-        var producto = _context.Productos.FirstOrDefault(p => p.Id == id);
+        var producto = _repository.GetById(id);
 
         if (producto == null)
             return null;
@@ -75,22 +75,14 @@ public class ProductoService
         if (dto.StockMinimo.HasValue) producto.StockMinimo = dto.StockMinimo.Value;
         if (dto.Precio.HasValue) producto.Precio = dto.Precio.Value;
 
-        _context.SaveChanges();
+        _repository.Update(producto);
 
         return producto;
     }
 
     public bool Delete(int id)
     {
-        var producto = _context.Productos.FirstOrDefault(p => p.Id == id);
-
-        if (producto == null)
-            return false;
-
-        _context.Productos.Remove(producto);
-        _context.SaveChanges();
-
-        return true;
+        return _repository.Delete(id);
     }
 
     private string GenerarSKU()
