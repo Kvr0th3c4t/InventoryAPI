@@ -5,7 +5,8 @@ namespace InventoryAPI.Data;
 
 public class ApplicationDbContext : DbContext
 {
-    public DbSet<Producto> Productos {get; set;}
+    public DbSet<Producto> Productos { get; set; }
+    public DbSet<Categoria> Categorias { get; set; }
     public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
     {
 
@@ -14,7 +15,7 @@ public class ApplicationDbContext : DbContext
     {
         modelBuilder.Entity<Producto>()
             .Property(p => p.Precio)
-            .HasPrecision(18, 2);  
+            .HasPrecision(18, 2);
     }
 }
 

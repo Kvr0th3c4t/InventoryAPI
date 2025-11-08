@@ -1,4 +1,3 @@
-using InventoryAPI.Data;
 using InventoryAPI.Dtos.ProductoDtos;
 using InventoryAPI.Models;
 using InventoryAPI.Repositories;
