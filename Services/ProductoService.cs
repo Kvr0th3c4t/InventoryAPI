@@ -1,6 +1,8 @@
 using InventoryAPI.Dtos.ProductoDtos;
+using InventoryAPI.Events;
 using InventoryAPI.Models;
 using InventoryAPI.Repositories;
+using InventoryAPI.Services.Interfaces;
 
 namespace InventoryAPI.Services;
 
@@ -9,10 +11,13 @@ public class ProductoService
     private readonly IProductoRepository _productoRepository;
     private readonly ICategoriaRepository _categoriaRepository;
 
-    public ProductoService(IProductoRepository productoRepository, ICategoriaRepository categoriaRepository)
+    private readonly IEventPublisher _eventpublisher;
+
+    public ProductoService(IProductoRepository productoRepository, ICategoriaRepository categoriaRepository, IEventPublisher eventPublisher)
     {
         _productoRepository = productoRepository;
         _categoriaRepository = categoriaRepository;
+        _eventpublisher = eventPublisher;
     }
 
     public List<ResponseProductoDto> GetAll()
@@ -91,6 +96,8 @@ public class ProductoService
         if (dto.StockMinimo.HasValue && dto.StockMinimo.Value < 0)
             throw new ArgumentException("El stock mínimo no puede ser negativo");
 
+
+
         if (dto.CategoriaId.HasValue)
         {
             var categoriaBuscada = _categoriaRepository.GetById(dto.CategoriaId.Value);
@@ -110,8 +117,22 @@ public class ProductoService
 
         _productoRepository.Update(producto);
 
+        if (producto.StockActual < producto.StockMinimo)
+        {
+            var evento = new StockBajoEvent
+            {
+                ProductoId = producto.Id,
+                ProductoNombre = producto.Nombre,
+                StockActual = producto.StockActual,
+                StockMinimo = producto.StockMinimo,
+                FechaEvento = DateTime.Now
+            };
+
+            _eventpublisher.Publish(evento);
+        }
+
         return MapToResponseDto(producto);
-        
+
     }
 
     public bool Delete(int id)
