@@ -17,14 +17,14 @@ public class ProductosController : ControllerBase
     }
 
     [HttpGet]
-    public ActionResult<List<Producto>> GetAll()
+    public ActionResult<List<ResponseProductoDto>> GetAll()
     {
         var productos = _productoService.GetAll();
         return Ok(productos);
     }
 
     [HttpGet("{id}")]
-    public ActionResult<Producto> GetProductById(int id)
+    public ActionResult<ResponseProductoDto> GetProductById(int id)
     {
         var producto = _productoService.GetProductoById(id);
 
@@ -35,7 +35,7 @@ public class ProductosController : ControllerBase
     }
 
     [HttpPost]
-    public ActionResult<Producto> Create([FromBody] CreateProductoDto dto)
+    public ActionResult<ResponseProductoDto> Create([FromBody] CreateProductoDto dto)
     {
         try
         {
@@ -49,7 +49,7 @@ public class ProductosController : ControllerBase
     }
 
     [HttpPut("{id}")]
-    public ActionResult<Producto> UpdateProduct(int id, [FromBody] UpdateProductoDto dto)
+    public ActionResult<ResponseProductoDto> UpdateProduct(int id, [FromBody] UpdateProductoDto dto)
     {
         try
         {
