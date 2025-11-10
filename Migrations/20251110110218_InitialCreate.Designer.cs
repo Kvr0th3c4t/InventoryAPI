@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace InventoryAPI.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20251108230617_CreacionCategorias")]
-    partial class CreacionCategorias
+    [Migration("20251110110218_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -46,6 +46,41 @@ namespace InventoryAPI.Migrations
                     b.ToTable("Categorias");
                 });
 
+            modelBuilder.Entity("InventoryAPI.Models.MovimientoStock", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("Cantidad")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("FechaMovimiento")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("ProductoId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("ProveedorId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Razon")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Tipo")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProductoId");
+
+                    b.HasIndex("ProveedorId");
+
+                    b.ToTable("MovimientosStock");
+                });
+
             modelBuilder.Entity("InventoryAPI.Models.Producto", b =>
                 {
                     b.Property<int>("Id")
@@ -71,6 +106,9 @@ namespace InventoryAPI.Migrations
                         .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
 
+                    b.Property<int>("ProveedorId")
+                        .HasColumnType("int");
+
                     b.Property<string>("SKU")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -85,7 +123,49 @@ namespace InventoryAPI.Migrations
 
                     b.HasIndex("CategoriaId");
 
+                    b.HasIndex("ProveedorId");
+
                     b.ToTable("Productos");
+                });
+
+            modelBuilder.Entity("InventoryAPI.Models.Proveedor", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Email")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Nombre")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Telefono")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Proveedores");
+                });
+
+            modelBuilder.Entity("InventoryAPI.Models.MovimientoStock", b =>
+                {
+                    b.HasOne("InventoryAPI.Models.Producto", "Producto")
+                        .WithMany("MovimientosStock")
+                        .HasForeignKey("ProductoId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("InventoryAPI.Models.Proveedor", "Proveedor")
+                        .WithMany("MovimientosStock")
+                        .HasForeignKey("ProveedorId");
+
+                    b.Navigation("Producto");
+
+                    b.Navigation("Proveedor");
                 });
 
             modelBuilder.Entity("InventoryAPI.Models.Producto", b =>
@@ -96,11 +176,31 @@ namespace InventoryAPI.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("InventoryAPI.Models.Proveedor", "Proveedor")
+                        .WithMany("Productos")
+                        .HasForeignKey("ProveedorId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.Navigation("Categoria");
+
+                    b.Navigation("Proveedor");
                 });
 
             modelBuilder.Entity("InventoryAPI.Models.Categoria", b =>
                 {
+                    b.Navigation("Productos");
+                });
+
+            modelBuilder.Entity("InventoryAPI.Models.Producto", b =>
+                {
+                    b.Navigation("MovimientosStock");
+                });
+
+            modelBuilder.Entity("InventoryAPI.Models.Proveedor", b =>
+                {
+                    b.Navigation("MovimientosStock");
+
                     b.Navigation("Productos");
                 });
 #pragma warning restore 612, 618
