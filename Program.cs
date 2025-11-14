@@ -14,6 +14,10 @@ builder.Services.AddScoped<ICategoriaRepository, CategoriaRepository>();
 builder.Services.AddScoped<ProductoService>();
 builder.Services.AddScoped<CategoriaService>();
 builder.Services.AddScoped<IEventPublisher, ConsoleEventPublisher>();
+builder.Services.AddScoped<IProveedorRepository, ProveedorRepository>();
+builder.Services.AddScoped<IMovimientoStockRepository, MovimientosStockRepository>();
+builder.Services.AddScoped<ProveedorService>();
+builder.Services.AddScoped<MovimientoStockService>();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 

@@ -5,5 +5,5 @@ public enum TipoMovimiento
     Entrada,
     Salida,
     AjustePositivo,
-    Ajustenegativo
+    AjusteNegativo
 }

@@ -10,7 +10,6 @@ public class ProductoService
 {
     private readonly IProductoRepository _productoRepository;
     private readonly ICategoriaRepository _categoriaRepository;
-
     private readonly IEventPublisher _eventpublisher;
 
     public ProductoService(IProductoRepository productoRepository, ICategoriaRepository categoriaRepository, IEventPublisher eventPublisher)
