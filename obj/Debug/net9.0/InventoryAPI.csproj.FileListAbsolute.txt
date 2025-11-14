@@ -145,8 +145,6 @@ C:\Users\Adria\OneDrive\Escritorio\InventoryAPI\bin\Debug\net9.0\runtimes\win\li
 C:\Users\Adria\OneDrive\Escritorio\InventoryAPI\bin\Debug\net9.0\runtimes\win\lib\net6.0\System.Windows.Extensions.dll
 C:\Users\Adria\OneDrive\Escritorio\InventoryAPI\obj\Debug\net9.0\InventoryAPI.csproj.AssemblyReference.cache
 C:\Users\Adria\OneDrive\Escritorio\InventoryAPI\obj\Debug\net9.0\InventoryAPI.GeneratedMSBuildEditorConfig.editorconfig
-C:\Users\Adria\OneDrive\Escritorio\InventoryAPI\obj\Debug\net9.0\InventoryAPI.AssemblyInfoInputs.cache
-C:\Users\Adria\OneDrive\Escritorio\InventoryAPI\obj\Debug\net9.0\InventoryAPI.AssemblyInfo.cs
 C:\Users\Adria\OneDrive\Escritorio\InventoryAPI\obj\Debug\net9.0\InventoryAPI.csproj.CoreCompileInputs.cache
 C:\Users\Adria\OneDrive\Escritorio\InventoryAPI\obj\Debug\net9.0\InventoryAPI.MvcApplicationPartsAssemblyInfo.cs
 C:\Users\Adria\OneDrive\Escritorio\InventoryAPI\obj\Debug\net9.0\InventoryAPI.MvcApplicationPartsAssemblyInfo.cache
@@ -167,3 +165,5 @@ C:\Users\Adria\OneDrive\Escritorio\InventoryAPI\obj\Debug\net9.0\refint\Inventor
 C:\Users\Adria\OneDrive\Escritorio\InventoryAPI\obj\Debug\net9.0\InventoryAPI.pdb
 C:\Users\Adria\OneDrive\Escritorio\InventoryAPI\obj\Debug\net9.0\InventoryAPI.genruntimeconfig.cache
 C:\Users\Adria\OneDrive\Escritorio\InventoryAPI\obj\Debug\net9.0\ref\InventoryAPI.dll
+C:\Users\Adria\OneDrive\Escritorio\InventoryAPI\obj\Debug\net9.0\InventoryAPI.AssemblyInfoInputs.cache
+C:\Users\Adria\OneDrive\Escritorio\InventoryAPI\obj\Debug\net9.0\InventoryAPI.AssemblyInfo.cs
