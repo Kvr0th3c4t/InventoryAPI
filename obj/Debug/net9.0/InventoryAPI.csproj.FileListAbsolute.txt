@@ -167,3 +167,5 @@ C:\Users\Adria\OneDrive\Escritorio\InventoryAPI\obj\Debug\net9.0\InventoryAPI.ge
 C:\Users\Adria\OneDrive\Escritorio\InventoryAPI\obj\Debug\net9.0\ref\InventoryAPI.dll
 C:\Users\Adria\OneDrive\Escritorio\InventoryAPI\obj\Debug\net9.0\InventoryAPI.AssemblyInfoInputs.cache
 C:\Users\Adria\OneDrive\Escritorio\InventoryAPI\obj\Debug\net9.0\InventoryAPI.AssemblyInfo.cs
+C:\Users\Adria\OneDrive\Escritorio\InventoryAPI\bin\Debug\net9.0\MediatR.dll
+C:\Users\Adria\OneDrive\Escritorio\InventoryAPI\bin\Debug\net9.0\MediatR.Contracts.dll

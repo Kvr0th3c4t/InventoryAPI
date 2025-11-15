@@ -2,6 +2,12 @@ using Microsoft.AspNetCore.Mvc;
 using InventoryAPI.Models;
 using InventoryAPI.Dtos.ProductoDtos;
 using InventoryAPI.Services;
+using MediatR;
+using InventoryAPI.Features.Productos.Commands.CreateProducto;
+using InventoryAPI.Features.Productos.Queries.GetProductoById;
+using InventoryAPI.Features.Productos.Queries.GetAllProductos;
+using InventoryAPI.Features.Productos.DeleteProducto;
+using InventoryAPI.Features.Productos.Commands.UpdateProducto;
 
 namespace InventoryAPI.Controllers;
 
@@ -9,70 +15,68 @@ namespace InventoryAPI.Controllers;
 [Route("api/[controller]")]
 public class ProductosController : ControllerBase
 {
-    private readonly ProductoService _productoService;
+    private readonly IMediator _mediator;
 
-    public ProductosController(ProductoService productoService)
+    public ProductosController(IMediator mediator)
     {
-        _productoService = productoService;
+        _mediator = mediator;
     }
 
     [HttpGet]
-    public ActionResult<List<ResponseProductoDto>> GetAll()
+    public async Task<IActionResult> GetAll()
     {
-        var productos = _productoService.GetAll();
-        return Ok(productos);
+        var query = new GetAllProductosQuery();
+        var result = await _mediator.Send(query);
+        return Ok(result);
     }
 
     [HttpGet("{id}")]
-    public ActionResult<ResponseProductoDto> GetProductById(int id)
+    public async Task<IActionResult> GetProductById(int id)
     {
-        var producto = _productoService.GetProductoById(id);
-
-        if (producto == null)
-            return NotFound();
-
-        return Ok(producto);
+        var query = new GetProductoByIdQuery(id);
+        var result = await _mediator.Send(query);
+        return Ok(result);
     }
 
     [HttpPost]
-    public ActionResult<ResponseProductoDto> Create([FromBody] CreateProductoDto dto)
+    public async Task<IActionResult> Create([FromBody] CreateProductoDto dto)
     {
-        try
-        {
-            var producto = _productoService.Create(dto);
-            return CreatedAtAction(nameof(GetProductById), new { id = producto.Id }, producto);
-        }
-        catch (ArgumentException ex)
-        {
-            return BadRequest(ex.Message);
-        }
+        var command = new CreateProductoCommand(
+            dto.Nombre,
+            dto.Descripcion,
+            dto.CategoriaId,
+            dto.StockActual,
+            dto.StockMinimo,
+            dto.Precio
+        );
+
+        var result = await _mediator.Send(command);
+        return CreatedAtAction(nameof(GetProductById), new { id = result.Id }, result);
     }
 
     [HttpPut("{id}")]
-    public ActionResult<ResponseProductoDto> UpdateProduct(int id, [FromBody] UpdateProductoDto dto)
+    public async Task<IActionResult> UpdateProduct(int id, [FromBody] UpdateProductoDto dto)
     {
-        try
-        {
-            var producto = _productoService.Update(id, dto);
+        var command = new UpdateProductoCommand(
+            id,
+            dto.Nombre,
+            dto.Descripcion,
+            dto.StockActual,
+            dto.StockMinimo,
+            dto.CategoriaId,
+            dto.Precio
+        );
 
-            if (producto == null)
-                return NotFound();
+        var result = await _mediator.Send(command);
 
-            return Ok(producto);
-        }
-        catch (ArgumentException ex)
-        {
-            return BadRequest(ex.Message);
-        }
+        return Ok(result);
     }
 
     [HttpDelete("{id}")]
-    public ActionResult DeleteProducto(int id)
+    public async Task<IActionResult> DeleteProducto(int id)
     {
-        bool eliminado = _productoService.Delete(id);
-
-        if (!eliminado)
-            return NotFound();
+        var query = new DeleteProductoCommand(id);
+        var result = await _mediator.Send(query);
 
         return NoContent();
     }

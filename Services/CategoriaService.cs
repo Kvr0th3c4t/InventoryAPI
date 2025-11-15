@@ -25,12 +25,12 @@ public class CategoriaService
 
     public Categoria Create(CreateCategoriaDto dto)
     {
-        if (string.IsNullOrWhiteSpace(dto.Nombre))
+        if (string.IsNullOrWhiteSpace(dto.CategoriaNombre))
             throw new ArgumentException("La categoría debe tener un nombre");
 
         var categoria = new Categoria
         {
-            Nombre = dto.Nombre,
+            Nombre = dto.CategoriaNombre,
             Descripcion = dto.Descripcion
         };
 

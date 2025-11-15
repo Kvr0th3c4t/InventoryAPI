@@ -12,7 +12,7 @@ public class Producto
     public DateTime FechaCreacion { get; set; }
     public int CategoriaId { get; set; }
     public Categoria? Categoria { get; set; }
-    public int ProveedorId { get; set; }
+    public int? ProveedorId { get; set; }
     public Proveedor? Proveedor { get; set; }
     public ICollection<MovimientoStock>? MovimientosStock { get; set; }
 }
